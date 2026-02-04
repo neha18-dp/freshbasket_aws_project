@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us</title>
+    <style>
+.ss
+{
+background-color:black;
+border-radius:50px;
+padding:1px;
+width:100%;
+height:200px;
+box-shadow:0 0 10px black;
+opacity:0.5;
+}
+.sri02
+{
+color:white;
+padding:10px;
+position:absolute;
+top:200px;
+left:650px;
+font-size:40px;
+background-color:#66CC00;
+border-radius:10px;
+}
+.sri03
+{
+font-size:22px;
+text-align:center;
+padding:50px;
+background-color:#66CC00;
+}
+.mn
+{
+width:300px;
+height:300px;
+}
+</style>
+</head>
+<body>
+<div>
+    {% include "header.html" %}
+</div>
+<div class="sri01">
+    <img class="ss" src="/static/aboutbg.jpeg">
+</div>
+<div class="sri02">
+    ABOUT US
+</div>
+<div class="sri04">
+<center> <img class="mn" src="/static/about.jpeg"></center>
+</div>
+<div>
+    <center><font size="10"><b>what we do</b></font></center>
+</div>
+<div class="sri03">
+    FreshBasket is a digital marketplace designed to directly connect farmers, sellers, and customers through a simple and reliable online platform.<br><br>
+
+    Our goal is to make buying and selling fresh fruits, vegetables, and seasonal produce easier, faster, and more transparent. Sellers can list their products with complete details such as price, quantity, and category, while customers can browse, compare, and place orders conveniently from anywhere.<br><br>
+
+    FreshBasket empowers farmers and small sellers by giving them direct access to customers, eliminating unnecessary middlemen and ensuring fair pricing for both sellers and buyers. The platform also helps customers get fresh produce at competitive prices with assured quality.<br><br>
+
+    By using modern web technology, FreshBasket supports efficient order management, product categorization, and role-based access for users, sellers, and administrators. Our mission is to strengthen the agricultural supply chain and promote a smarter, more sustainable way of buying fresh food.
+</div>
+
+<br>
+<div>
+    {% include "footer.html" %}
+</div>
+</body>
+</html>

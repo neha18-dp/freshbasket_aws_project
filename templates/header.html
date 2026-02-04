@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sellyard</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+body { margin:0; }
+
+.jeni01 {
+    background-color:#66CC00;
+    height:100px;
+}
+
+.jeni1 {
+    color:white;
+    width:450px;
+    float:left;
+    padding:10px;
+    font-family:sans-serif;
+}
+
+.tabwidth {
+    width:1500px;
+    border-spacing:0;
+}
+
+#search-box {
+    height:50px;
+    width:450px;
+    border-radius:50px;
+    border:1px solid #66CC00;
+    font-size:20px;
+}
+
+.buttoni {
+    border-radius:50px;
+    border:1px solid #66CC00;
+    height:50px;
+    width:60px;
+    cursor:pointer;
+}
+
+.buttoni:hover {
+    box-shadow:1px 2px 5px black;
+}
+
+.header2background {
+    background-color:white;
+    border-bottom:4px solid #66CC00;
+    height:45px;
+    padding:5px;
+}
+
+.jen {
+    padding:5px 20px;
+    color:grey;
+    text-decoration:none;
+    font-size:21px;
+}
+
+.jen:hover {
+    color:#66CC00;
+}
+
+/* Dropdown */
+.dropdown {
+    position:relative;
+    display:inline-block;
+}
+
+.dropbtn {
+    background:white;
+    color:grey;
+    padding:10px;
+    font-size:18px;
+    border:none;
+    cursor:pointer;
+}
+
+.dropdown-content {
+    display:none;
+    position:absolute;
+    background:#f9f9f9;
+    min-width:200px;
+    box-shadow:0 8px 16px rgba(0,0,0,0.2);
+    z-index:1;
+}
+
+.dropdown-content a {
+    color:black;
+    padding:12px 16px;
+    text-decoration:none;
+    display:block;
+}
+
+.dropdown-content a:hover {
+    background:#f1f1f1;
+    color:#66CC00;
+}
+
+.dropdown:hover .dropdown-content {
+    display:block;
+}
+
+.dropdown:hover .dropbtn {
+    color:#66CC00;
+}
+
+.logout-btn {
+    background:white;
+    color:#66CC00;
+    border-radius:10px;
+    padding:8px 15px;
+    text-decoration:none;
+    font-size:18px;
+}
+
+.logout-btn:hover {
+    box-shadow:1px 2px 5px black;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP HEADER -->
+<div class="jeni01">
+<table class="tabwidth">
+<tr>
+<td>
+    <div class="jeni1"><h1>FreshBasket</h1></div>
+</td>
+
+<td>
+    <input type="search" id="search-box" placeholder="Search products...">
+    <button class="buttoni"><i class="fa fa-search" style="font-size:30px;color:#66CC00"></i></button>
+
+    <a href="/profile">
+        <button class="buttoni"><i class="fa fa-user" style="font-size:30px;color:#66CC00"></i></button>
+    </a>
+
+    <a href="/logout" class="logout-btn">Logout</a>
+</td>
+</tr>
+</table>
+</div>
+
+<!-- NAVBAR -->
+<div class="header2background">
+<center>
+
+<a class="jen" href="/home">Home</a>
+<a class="jen" href="/aboutus">About Us</a>
+
+<div class="dropdown">
+    <button class="dropbtn">Category <i class="fa fa-angle-down"></i></button>
+    <div class="dropdown-content">
+        <a href="/vegetables">Vegetables</a>
+        <a href="/fruits">Fruits</a>
+        <a href="/seasonal">Seasonal (Fruits & Veggies)</a>
+        
+    </div>
+</div>
+
+<div class="dropdown">
+    <button class="dropbtn">My Account <i class="fa fa-angle-down"></i></button>
+    <div class="dropdown-content">
+
+        <!-- USER OPTIONS -->
+        {% if session.get("role") == "user" %}
+            <a href="{{ url_for('profile') }}">My Profile</a>
+            <a href="{{ url_for('cart') }}">My Cart</a>
+            <a href="{{ url_for('myorders') }}">My Orders</a>
+        {% endif %}
+
+
+        <!-- ADMIN OPTIONS -->
+        {% if session.get("role") == "admin" %}
+            <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+            <a href="{{ url_for('profile') }}">My Profile</a>
+        {% endif %}
+
+        <!-- SELLER OPTIONS -->
+        {% if session.get("role") == "seller" %}
+            <a href="{{ url_for('seller_dashboard') }}">Seller</a>
+
+        {% endif %}
+
+
+    </div>
+</div>
+
+
+</center>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FreshBasket | Home</title>
+
+<style>
+/* SLIDES */
+.mySlides { display: none; }
+
+/* SLIDESHOW CONTAINER */
+.slideshow-container {
+  width: 100%;
+  max-width: 1500px;
+  height: 600px;
+  position: relative;
+  margin: auto;
+  overflow: hidden;
+}
+
+/* SLIDE IMAGE */
+.mySlides img {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+}
+
+/* TEXT OVER IMAGE */
+.text {
+  position: absolute;
+  top: 50%;
+  right: 180px;        /* <-- THIS is the key line */
+  transform: translateY(-50%);
+  text-align: right;
+  color: white;
+  max-width: 450px;
+}
+
+
+
+/* TEXT STYLING */
+.text h2 {
+  font-size: 32px;
+  letter-spacing: 2px;
+  color: #99FF99;
+  margin-bottom: 10px;
+}
+
+.text h1 {
+  font-size: 60px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.text p {
+  font-size: 20px;
+  margin-bottom: 25px;
+}
+
+/* BUTTON */
+.butto {
+  background-color: transparent;
+  border: 2px solid #66CC00;
+  color: white;
+  width: 140px;
+  height: 45px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.butto:hover {
+  background-color: #66CC00;
+}
+
+/* PREV & NEXT */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  padding: 16px;
+  color: white;
+  font-size: 20px;
+  background-color: rgba(0,0,0,0.4);
+}
+.next { right: 0; }
+
+/* DOTS */
+.dot {
+  height: 15px;
+  width: 15px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+}
+.active { background-color: #717171; }
+
+/* CATEGORY SECTION */
+.logo {
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.logo:hover { opacity: 0.7; }
+
+.tds {
+  padding: 25px;
+  background-color: rgba(224,224,224,0.5);
+  border-radius: 10px;
+}
+
+.tab { margin: auto; }
+.std { padding: 30px; }
+</style>
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<!-- SLIDESHOW -->
+<div class="slideshow-container">
+
+  <div class="mySlides">
+    <img src="/static/vege.jpg">
+    <div class="text">
+      <h2>FRESH VEGETABLES</h2>
+      <h1>100% Organic</h1>
+      <p>Free Pickup & Delivery</p>
+      <a href="/vegetables"><button class="butto">Shop Now</button></a>
+    </div>
+  </div>
+
+  <div class="mySlides">
+    <img src="/static/fruity.jpg">
+    <div class="text">
+      <h2>FRESH FRUITS</h2>
+      <h1>Farm to Home</h1>
+      <p>Free Pickup & Delivery</p>
+      <a href="/fruits"><button class="butto">Shop Now</button></a>
+    </div>
+  </div>
+
+  <a class="prev" onclick="plusSlides(-1)">❮</a>
+  <a class="next" onclick="plusSlides(1)">❯</a>
+</div>
+
+<!-- DOTS -->
+<div style="text-align:center; margin-top:10px;">
+  <span class="dot" onclick="currentSlide(1)"></span>
+  <span class="dot" onclick="currentSlide(2)"></span>
+</div>
+
+<!-- CATEGORIES -->
+<h1 style="text-align:center; margin-top:40px;">Categories</h1>
+
+<table class="tab">
+<tr>
+  <td class="std"></td>
+
+  <td class="tds">
+    <a href="/fruits">
+      <img class="logo" src="/static/fruitlogo.jpg" height="150" width="150">
+    </a>
+    <center>Fruits</center>
+  </td>
+
+  <td class="std"></td>
+
+  <td class="tds">
+    <a href="/vegetables">
+      <img class="logo" src="/static/vegelogo.jpg" height="150" width="150">
+    </a>
+    <center>Vegetables</center>
+  </td>
+
+  <td class="std"></td>
+</tr>
+</table>
+
+{% include "footer.html" %}
+
+<!-- SLIDESHOW SCRIPT -->
+<script>
+let slideIndex = 1;
+showSlides(slideIndex);
+
+function plusSlides(n) { showSlides(slideIndex += n); }
+function currentSlide(n) { showSlides(slideIndex = n); }
+
+function showSlides(n) {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  let dots = document.getElementsByClassName("dot");
+
+  if (n > slides.length) slideIndex = 1;
+  if (n < 1) slideIndex = slides.length;
+
+  for (i = 0; i < slides.length; i++) slides[i].style.display = "none";
+  for (i = 0; i < dots.length; i++) dots[i].classList.remove("active");
+
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].classList.add("active");
+}
+</script>
+
+</body>
+</html>

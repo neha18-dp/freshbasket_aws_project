@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Profile</title>
+
+<style>
+body {
+    background-image:url(/static/pfbg.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.na {
+    text-decoration:none;
+    color:white;
+    background-color:#009900;
+    border:3px solid white;
+    padding:20px;
+    font-size:24px;
+}
+.na:hover {
+    background-color:#006600;
+}
+
+.header {
+    background-color:rgba(102,204,0,0.7);
+    padding:50px;
+    width:550px;
+    box-shadow: 5px 10px grey;
+    border-radius:20px;
+}
+
+.inside-header {
+    background-image:url("/static/pfbg.jpg");
+    background-size: cover;
+    border-radius:10px;
+    padding:5px;
+    width:300px;
+    height:80px;
+}
+
+.txtbox {
+    padding:10px;
+    width:100%;
+    border-radius:5px;
+    border:2px solid #660066;
+    font-size:15px;
+}
+
+.mid {
+    padding-left:400px;
+}
+
+.box {
+    padding:10px;
+    font-size:20px;
+    width:120px;
+    border:2px solid #669900;
+    border-radius:10px;
+    background-color:white;
+    color:#669900;
+}
+</style>
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<br><br>
+
+<div class="mid">
+<div class="header">
+
+<center>
+<div class="inside-header">
+<h2>Account Settings</h2>
+</div>
+</center>
+
+
+<form method="POST">
+
+<h3>Username</h3>
+<input class="txtbox" type="text" name="username">
+
+<h3>Password</h3>
+<input class="txtbox" type="password" name="password">
+
+<h3>Email</h3>
+<input class="txtbox" type="email" name="email">
+
+<h3>First Name</h3>
+<input class="txtbox" type="text" name="fname">
+
+<h3>Last Name</h3>
+<input class="txtbox" type="text" name="lname">
+
+<h3>Phone</h3>
+<input class="txtbox" type="text" name="phone">
+
+<h3>Address</h3>
+<input class="txtbox" type="text" name="address">
+
+<br><br>
+<input class="box" type="submit" value="Update">
+
+</form>
+
+</div>
+</div>
+
+<br>
+{% include "footer.html" %}
+
+{% if success %}
+<script>
+    alert("Profile updated successfully!");
+</script>
+{% endif %}
+
+</body>
+</html>

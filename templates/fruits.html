@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fruits</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+.page-title {
+    margin: 30px;
+    font-size: 36px;
+}
+.products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 30px;
+}
+.card {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.card h3 {
+    color: #66CC00;
+    margin: 10px 0;
+}
+.price {
+    font-size: 18px;
+    font-weight: bold;
+}
+.stock {
+    color: green;
+}
+.qty {
+    width: 60px;
+    padding: 5px;
+    border-radius: 8px;
+    border: 2px solid #66CC00;
+}
+.btn {
+    float: right;
+    padding: 8px 15px;
+    border-radius: 10px;
+    border: 2px solid #66CC00;
+    background: transparent;
+    color: #66CC00;
+    cursor: pointer;
+}
+.btn:hover {
+    background: #66CC00;
+    color: white;
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #66CC00;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    display: none;
+    z-index: 999;
+}
+</style>
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<h1 class="page-title">Fruits</h1>
+
+<div class="products">
+
+{% for fruit in [
+    ("Apple","AP.jpg","Fresh red apples","180 / kg"),
+    ("Banana","banana.jpeg","Organic bananas","50 / dozen"),
+    ("Guava","guava.jpg","Fresh green guava","90 / kg"),
+    ("Litchi","litchi.jpg","Sweet seasonal litchi","220 / kg"),
+    ("Mango","mango.jpg","Alphonso mangoes","250 / kg"),
+    ("Orange","orange.jpg","Juicy oranges","80 / kg"),
+    ("Pineapple","pineapple.jpg","Fresh pineapples","70 / piece"),
+    ("Pomegranate","pomogranate.png","Premium pomegranates","200 / kg"),
+    ("Strawberry","strawberry.jpg","Fresh strawberries","300 / box")
+] %}
+<div class="card">
+    <img src="/static/fruits/{{ fruit[1] }}">
+    <h3>{{ fruit[0] }}</h3>
+    <p>{{ fruit[2] }}</p>
+    <p class="price">Rs. {{ fruit[3] }}</p>
+    <p class="stock">Available</p>
+
+    <input type="number" class="qty" value="1" min="1" id="qty-{{ fruit[0] }}">
+    <button class="btn" onclick="addToCart('{{ fruit[0] }}')">Add to Cart</button>
+</div>
+{% endfor %}
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+{% include "footer.html" %}
+
+<script>
+function addToCart(product) {
+    fetch(`/addtocart/${product}`, {
+        method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+        showToast(data.message || "Done");
+    })
+    .catch(() => {
+        showToast("Error adding to cart");
+    });
+}
+
+function showToast(msg) {
+    let toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.style.display = "block";
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 2000);
+}
+</script>
+
+
+</body>
+</html>

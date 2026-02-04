@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <style>
+    .admin-nav {
+        margin: 40px 60px;
+    }
+
+    .na {
+    text-decoration: none;
+    color: white;
+    background-color: #009900;
+    border: 3px solid white;
+    padding: 20px 40px;
+    font-size: 22px;
+    margin-right: 20px;
+    border-radius: 10px;
+    display: inline-block;
+    }
+
+    .na:hover {
+        background-color: #006600;
+    }
+    </style>
+
+</head>
+<body>
+<div>
+    {% include "header.html" %}
+</div>
+<br>
+<br>
+<div class="admin-nav">
+    <a class="na" href="{{ url_for('admin_products') }}">Manage Products</a>
+    <a class="na" href="{{ url_for('admin_sellers') }}">Manage Sellers</a>
+</div>
+
+
+<br><br>
+<div>
+    {% include "footer.html" %}
+</div>
+
+</body>
+</html>

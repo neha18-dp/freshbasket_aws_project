@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Us</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: url("{{ url_for('static', filename='jss.jpg') }}") center/cover no-repeat;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            margin: 0;
+        }
+
+        /* CONTACT INFO */
+        .info-section {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
+        }
+
+        .info-box {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .info-box img {
+            width: 50px;
+            margin-bottom: 15px;
+        }
+
+        .info-box b {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 18px;
+            color: #2e7d32;
+        }
+
+        .info-box p {
+            margin: 0;
+            font-size: 15px;
+            color: #444;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+{% include "header.html" %}
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-content">
+        <h1>Contact Us</h1>
+    </div>
+</div>
+
+<!-- CONTACT INFO -->
+<div class="info-section">
+
+    <div class="info-box">
+        <img src="{{ url_for('static', filename='phone.jpeg') }}">
+        <b>PHONE</b>
+        <p>+01-2222-5632</p>
+    </div>
+
+    <div class="info-box">
+        <img src="{{ url_for('static', filename='location.jpeg') }}">
+        <b>ADDRESS</b>
+        <p>60-49 Road, Maharashtra</p>
+    </div>
+
+    <div class="info-box">
+        <img src="{{ url_for('static', filename='time.jpeg') }}">
+        <b>OPEN TIME</b>
+        <p>10:00 AM – 2:30 PM</p>
+    </div>
+
+    <div class="info-box">
+        <img src="{{ url_for('static', filename='email.jpeg') }}">
+        <b>EMAIL</b>
+        <p>freshbasket@gmail.com</p>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+{% include "footer.html" %}
+
+</body>
+</html>

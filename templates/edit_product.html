@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f7;
+        }
+
+        .container {
+            width: 450px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            text-align: center;
+            color: #009900;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 25px;
+            padding: 12px;
+            background: #009900;
+            color: white;
+            border: none;
+            font-size: 17px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #006600;
+        }
+    </style>
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<div class="container">
+    <h2>Edit Product #{{ product.product_id }}</h2>
+
+    <form method="POST">
+
+        <label>Name</label>
+        <input type="text" name="name" value="{{ product.name }}" required>
+
+        <label>Weight</label>
+        <input type="text" name="weight" value="{{ product.weight }}" required>
+
+        <label>Rate (₹)</label>
+        <input type="number" name="rate" value="{{ product.rate }}" required>
+
+        <label>Description</label>
+        <input type="text" name="description" value="{{ product.description }}" required>
+
+        <label>Category</label>
+        <input type="text" name="category" value="{{ product.category }}" required>
+
+        <button type="submit" class="btn">Update Product</button>
+
+    </form>
+</div>
+
+{% include "footer.html" %}
+
+</body>
+</html>

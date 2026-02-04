@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Cart</title>
+    <style>
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        th {
+            background-color: #66CC00;
+            color: white;
+        }
+
+        /* .place-btn {
+            background-color:#66CC00;
+            color:white;
+            padding:12px 40px;
+            font-size:18px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+        }
+        .place-btn:hover {
+            background-color:#4CAF00;
+        } */
+
+        .place-order-btn {
+    background-color: #66CC00;
+    color: white;
+    border: none;
+    padding: 14px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.place-order-btn:hover {
+    background-color: #55aa00;
+}
+
+    </style>
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<h1 style="text-align:center;">My Cart</h1>
+
+<table>
+    <tr>
+        <th>#</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Status</th>
+    </tr>
+
+    {% for item in cart %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ item.name }}</td>
+        <td>Rs. {{ item.total_price }}</td>
+        <td>{{ item.qty }}</td>
+        <td>{{ item.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- ✅ PLACE ORDER BUTTON -->
+{% if cart and cart|length > 0 %}
+<center>
+    <form action="{{ url_for('placeorder') }}" method="POST" style="text-align:center; margin-top:20px;">
+    <button type="submit" class="place-order-btn">
+        Place Order
+    </button>
+</form>
+
+</center>
+{% else %}
+<center>
+    <h3>Your cart is empty</h3>
+</center>
+{% endif %}
+
+{% include "footer.html" %}
+
+</body>
+</html>

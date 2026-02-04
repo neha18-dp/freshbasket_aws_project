@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Orders</title>
+<style>
+table {
+    width:90%;
+    margin:auto;
+    border-collapse:collapse;
+}
+th, td {
+    padding:12px;
+    border:1px solid #ccc;
+    text-align:center;
+}
+th {
+    background:#66CC00;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<h1 style="text-align:center;">My Orders</h1>
+
+<table>
+<tr>
+    <th>#</th>
+    <th>Product</th>
+    <th>Price</th>
+    <th>Status</th>
+</tr>
+
+{% for item in orders %}
+<tr>
+    <td>{{ loop.index }}</td>
+    <td>{{ item.name }}</td>
+    <td>{{ item.price }}</td>
+    <td>{{ item.status }}</td>
+</tr>
+{% endfor %}
+</table>
+
+{% include "footer.html" %}
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Sellers</title>
+   <style>
+        .na
+        {
+        text-decoration:none;
+        color:white;
+        background-color:#009900;
+        border:3px solid white;
+         padding:20px;
+         font-size:24px;
+        }
+        .na:hover
+        {
+         background-color:#006600;
+         color:white;
+        }
+        td
+{
+padding:5px;
+width:150px;
+height:100px;
+}
+th
+{
+background-color:#66CC00;
+padding:10px;
+}
+.bg
+{
+margin:10px;
+};
+.del
+{
+color:green;
+}
+
+</style>
+</head>
+<body>
+<div>
+    {% include "header.html" %}
+</div>
+<br>
+<br>
+<div class="nv">
+    <div class="nv">
+    <a class="na" href="{{ url_for('admin_products') }}">Manage Products</a>
+    <a class="na" href="{{ url_for('admin_sellers') }}"
+       style="background-color:#006600;">Manage Sellers</a>
+</div>
+
+
+</div>
+
+<br><br>
+  <h1>Seller info</h1>
+</div>
+
+<div class="bg">
+
+    <div>
+        <table border="1">
+            <tr>
+                <th>seller_id</th>
+                <th>seller name</th>
+                <th>password</th>
+                <th>email</th>
+                <th>Address</th>
+                <th>Delivery</th>
+                <th>Action</th>
+
+            </tr>
+            {% for row in data %}
+            <tr>
+    <td><h3>{{ row[0] }}</h3></td>
+    <td><h3>{{ row[1] }}</h3></td>
+    <td><h3>{{ row[2] }}</h3></td>
+    <td><b>{{ row[3] }}</b></td>
+    <td><b>{{ row[4] }}</b></td>
+
+    <!-- Delivery column -->
+    <td><b>Available</b></td>
+
+    <!-- Action column -->
+    <td>
+        <form action="{{ url_for('delete_seller', seller_id=row[0]) }}" method="POST">
+            <button type="submit"
+                style="color:green;border:none;background:none;cursor:pointer;">
+                Delete
+            </button>
+        </form>
+    </td>
+</tr>
+
+
+</td>
+            </tr>
+             {% endfor %}
+        </table>
+</div>
+
+</div>
+<div>
+    {% include "footer.html" %}
+</div>
+
+
+</body>
+</html>

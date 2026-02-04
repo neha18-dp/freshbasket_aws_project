@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title>
+  <style>
+
+        .na
+        {
+        text-decoration:none;
+        color:white;
+        background-color:#009900;
+        border:3px solid white;
+         padding:20px;
+         font-size:24px;
+        }
+        .na:hover
+        {
+         background-color:#006600;
+         color:white;
+        }
+        .tds
+{
+padding:20px;
+margin:50px;
+background-color:rgba(224,224,224,0.5);
+border-radius:10px;
+}
+.tab
+{
+padding:20px 30px;
+
+}
+.std
+{
+padding:30px;
+}
+    </style>
+</head>
+<body>
+<div>
+    {% include "header.html" %}
+</div>
+<br>
+<br>
+<div class="nv">
+    <a class="na" href="{{ url_for('admin_products') }}"
+   style="background-color:#006600;">Manage Products</a>
+
+    <a class="na" href="{{ url_for('admin_sellers') }}">Manage Sellers</a>
+
+</div>
+<br><br>
+
+<!-- <div>
+    <h1>Product</h1>
+    <table class="tab" border="0">
+    <tr>
+        <td class="std"></td>
+        <td class="tds"><a href="{{ url_for('admin_fruits') }}"> <img class="logo" src="/static/fruitlogo.jpg" height="150px" width="150px"></a>
+      <br><center><label>Fruits</label></center></td><td class="std"></td>
+        <td class="tds"><a href="{{ url_for('admin_vegetables') }}"> <img class="logo" src="/static/vegelogo.jpg" height="150px" width="150px"></a>
+      <br><center><label>Vegetables</label></center></td><td class="std"></td>
+        <td class="tds"><a href="{{ url_for('admin_seasonal') }}"> <img class="logo" src="/static/vegetables/seasonal.webp" height="150px" width="150px"></a>
+      <br><center><label>Seasonal</label></center></td><td class="std"></td>
+    </tr></table>
+</div> -->
+
+<div style="display:flex; gap:40px; padding:40px; justify-content:center;">
+
+    <div class="tds">
+        <a href="{{ url_for('admin_fruits') }}">
+            <img src="/static/fruitlogo.jpg" height="150" width="150">
+            <center><label>Fruits</label></center>
+        </a>
+    </div>
+
+    <div class="tds">
+        <a href="{{ url_for('admin_vegetables') }}">
+            <img src="/static/vegelogo.jpg" height="150" width="150">
+            <center><label>Vegetables</label></center>
+        </a>
+    </div>
+
+    <div class="tds">
+        <a href="{{ url_for('admin_seasonal') }}">
+            <img src="/static/vegetables/seasonal.webp" height="150" width="150">
+            <center><label>Seasonal</label></center>
+        </a>
+    </div>
+
+</div>
+
+<div>
+    {% include "footer.html" %}
+</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller</title>
+   <style>
+        .na {
+            text-decoration:none;
+            color:white;
+            background-color:#009900;
+            border:3px solid white;
+            padding:20px;
+            font-size:24px;
+        }
+        .na:hover {
+            background-color:#006600;
+        }
+    </style>
+</head>
+<body>
+
+{% include "header.html" %}
+
+<br><br>
+
+<div class="nv">
+    <a class="na" href="{{ url_for('seller_products') }}">Product Details</a>
+    <a class="na" href="{{ url_for('seller_add_product') }}">Add Products</a>
+</div>
+
+<br><br>
+
+{% include "footer.html" %}
+
+</body>
+</html>

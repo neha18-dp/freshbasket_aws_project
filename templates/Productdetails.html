@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Details</title>
+    <style>
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin: auto;
+        }
+        th, td {
+            border: 2px solid green;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #009900;
+            color: white;
+        }
+        a.btn {
+            padding: 6px 12px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+        }
+        .update { background: #0066cc; }
+        .delete { background: #cc0000; }
+    </style>
+</head>
+<body>
+
+{% include "header.html" %}
+
+<h2 align="center">Seller Product Details</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Weight</th>
+        <th>Rate</th>
+        <th>Category</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for p in products %}
+    <tr>
+        <td>{{ p.product_id }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.weight }}</td>
+        <td>₹{{ p.rate }}</td>
+        <td>{{ p.category }}</td>
+        <td>
+            <a class="btn update" href="{{ url_for('seller_update', pid=p.product_id) }}">Update</a>
+            <a class="btn delete" href="{{ url_for('seller_delete', pid=p.product_id) }}"
+               onclick="return confirm('Delete this product?')">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<center>
+    <a href="{{ url_for('seller_dashboard') }}">⬅ Back to Seller Dashboard</a>
+</center>
+
+{% include "footer.html" %}
+</body>
+</html>

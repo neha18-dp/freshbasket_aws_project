@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+
+{% include "header.html" %}
+
+<h1>{{ title }}</h1>
+
+{% if products %}
+    <ul>
+    {% for p in products %}
+        <li>{{ p.name }} — {{ p.price }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No products found.</p>
+{% endif %}
+
+{% include "footer.html" %}
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Seasonal Fruits & Vegetables</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.page-title {
+    margin: 30px;
+    font-size: 36px;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 30px;
+}
+
+.card {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.card h3 {
+    color: #66CC00;
+    margin: 10px 0;
+}
+.price {
+    font-size: 18px;
+    font-weight: bold;
+}
+.stock {
+    color: green;
+}
+.qty {
+    width: 60px;
+    padding: 5px;
+    border-radius: 8px;
+    border: 2px solid #66CC00;
+}
+.btn {
+    float: right;
+    padding: 8px 15px;
+    border-radius: 10px;
+    border: 2px solid #66CC00;
+    background: transparent;
+    color: #66CC00;
+    cursor: pointer;
+}
+.btn:hover {
+    background: #66CC00;
+    color: white;
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #66CC00;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    display: none;
+    z-index: 999;
+}
+</style>
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<h1 class="page-title">Seasonal Fruits & Vegetables (Winter)</h1>
+
+<div class="products">
+
+<div class="card">
+<img src="/static/vegetables/greenpeas.webp">
+<h3>Green Peas</h3>
+<p>Fresh winter peas</p>
+<p class="price">Rs. 30 / kg</p>
+<p class="stock">Available: 18 kg</p>
+<input type="number" class="qty" value="1">
+<button class="btn" onclick="addToCart('Green Peas')">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="/static/vegetables/carrot.webp">
+<h3>Carrot</h3>
+<p>Sweet red carrots</p>
+<p class="price">Rs. 40 / kg</p>
+<p class="stock">Available: 25 kg</p>
+<input type="number" class="qty" value="1">
+<button class="btn" onclick="addToCart('Carrot')">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="/static/vegetables/beetroot.webp">
+<h3>Beetroot</h3>
+<p>Fresh beetroots</p>
+<p class="price">Rs. 50 / kg</p>
+<p class="stock">Available: 20 kg</p>
+<input type="number" class="qty" value="1">
+<button class="btn" onclick="addToCart('Beetroot')">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="/static/vegetables/spinach.jpg">
+<h3>Spinach</h3>
+<p>Iron-rich spinach</p>
+<p class="price">Rs. 20 / bunch</p>
+<p class="stock">Available: 30 bunches</p>
+<input type="number" class="qty" value="1">
+<button class="btn" onclick="addToCart('Spinach')">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="/static/vegetables/cabbage.jpg">
+<h3>Cauliflower</h3>
+<p>Fresh winter cauliflower</p>
+<p class="price">Rs. 30 / piece</p>
+<p class="stock">Available: 15 pcs</p>
+<input type="number" class="qty" value="1">
+<button class="btn" onclick="addToCart('Cauliflower')">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="/static/fruits/amla.jpg">
+<h3>Amla</h3>
+<p>Vitamin C rich amla</p>
+<p class="price">Rs. 60 / kg</p>
+<p class="stock">Available: 10 kg</p>
+<input type="number" class="qty" value="1">
+<button class="btn" onclick="addToCart('Amla')">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="/static/fruits/orange.webp">
+<h3>Orange</h3>
+<p>Winter citrus fruit</p>
+<p class="price">Rs. 50 / kg</p>
+<p class="stock">Available: 28 kg</p>
+<input type="number" class="qty" value="1">
+<button class="btn" onclick="addToCart('Orange')">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="/static/fruits/guava.jpg">
+<h3>Guava</h3>
+<p>Fresh winter guava</p>
+<p class="price">Rs. 60 / kg</p>
+<p class="stock">Available: 16 kg</p>
+<input type="number" class="qty" value="1">
+<button class="btn" onclick="addToCart('Guava')">Add to Cart</button>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+{% include "footer.html" %}
+
+<script>
+function addToCart(product) {
+    fetch(`/addtocart/${product}`, {
+        method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+        showToast(data.message || "Done");
+    })
+    .catch(() => {
+        showToast("Error adding to cart");
+    });
+}
+
+function showToast(msg) {
+    let toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.style.display = "block";
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 2000);
+}
+</script>
+<script>
+function addToCart(product) {
+    fetch(`/addtocart/${product}`, {
+        method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+        showToast(data.message || "Done");
+    })
+    .catch(() => {
+        showToast("Error adding to cart");
+    });
+}
+
+function showToast(msg) {
+    let toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.style.display = "block";
+
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 2000);
+}
+</script>
+
+
+</body>
+</html>
