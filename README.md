@@ -1,10 +1,35 @@
-# Sellyard - Fruits, Vegetables, and Homemade Items Ordering and Selling Website
+# FreshBasket – AWS SmartBridge SkillWallet Project ☁️🛒
 
-Welcome to Sellyard, a project created during my college studies in *2021*. Sellyard is a web application for ordering and selling fruits, vegetables, and homemade items. It features a frontend developed with HTML, CSS, and Flask framework for the backend, utilizing SQL for data storage.
+FreshBasket is a cloud-based e-commerce web application developed as part of the **AWS SmartBridge SkillWallet Program**.  
+The project focuses on building and deploying a **scalable web application using AWS cloud services**.
+
+FreshBasket allows users to order fruits and vegetables with dedicated modules for **Users, Sellers, and Admins**, hosted and managed using AWS infrastructure.
+
+---
+
+## Program Details
+
+- **Program Name:** AWS SmartBridge – SkillWallet  
+- **Project Type:** Cloud-Based Full Stack Application  
+- **Cloud Provider:** Amazon Web Services (AWS)
+
+---
 
 ## Introduction
 
-Sellyard is a platform where users can log in, explore products in different categories. Sellers have a dedicated login to manage their products by adding new items, updating existing ones, and removing items. The admin has separate access to manage sellers and products on the platform.
+FreshBasket is designed to demonstrate real-world usage of AWS services in a full-stack application.  
+The frontend interacts with a Flask-based backend deployed on AWS EC2, while data storage and messaging are handled using AWS managed services.
+
+---
+
+## AWS Services Used
+
+- **Amazon EC2** – Hosting the Flask backend application
+- **AWS IAM** – User roles, permissions, and secure access management
+- **Amazon DynamoDB** – NoSQL database for users, sellers, products, and orders
+- **Amazon SNS** – Notifications for order updates and system alerts
+
+---
 
 ## Screenshots
 
@@ -16,85 +41,105 @@ Sellyard is a platform where users can log in, explore products in different cat
 ![Home Page](/screenshots/home2.png)
 
 ### Category Page
-![Food Category Page](/screenshots/categories.png)
+![Category Page](/screenshots/categories.png)
 
 ### Profile Page
 ![Profile Page](/screenshots/profile.png)
 
-### Seller 
+---
 
-#### Product details
-![seller Page](/screenshots/seller.png)
+### Seller Module
 
-#### Add Product 
-![seller Page](/screenshots/selller1.png)
+#### Product Management
+![Seller Dashboard](/screenshots/seller.png)
 
-### Admin Page
-![admin Page](/screenshots/admin.png)
+#### Add Product
+![Add Product Page](/screenshots/seller_add.png)
+
+---
+
+### Admin Panel
+![Admin Page](/screenshots/admin.png)
+
+---
 
 ## Features
 
 ### User Features
+- User authentication and profile management
+- Browse products by category
+- Place orders
+- Receive notifications via AWS SNS
 
-- **User Authentication:** Users can log in, and their data is securely stored in an SQL database.
-
-- **Product Categories:** Products are displayed in different categories, providing a user-friendly browsing experience.
+---
 
 ### Seller Features
+- Separate seller login
+- Add, update, and delete products
+- Manage inventory using DynamoDB
 
-- **Seller Authentication:** Sellers can log in separately to view, add, update, and delete their products.
-
-- **Product Management:** Sellers have the ability to add new products, update existing items, and remove products from the inventory.
+---
 
 ### Admin Features
+- Admin login
+- Manage sellers and products
+- Monitor platform activity
 
-- **Admin Authentication:** Admins can log in separately to manage sellers and products.
+---
 
-- **User and Product Administration:** Admins can edit and delete seller accounts and products.
+## Database Design (DynamoDB)
 
-### Database Integration
+### Users Table
+- `user_id` (Partition Key)
+- `username`
+- `email`
+- `address`
+- `phone`
 
-- **SQL Database:** All data, including user information, product details, and seller information, is stored in an SQL database.
+### Products Table
+- `product_id` (Partition Key)
+- `seller_id`
+- `name`
+- `price`
+- `category`
+- `quantity`
+- `image_url`
 
-### Database Schema
+### Sellers Table
+- `seller_id` (Partition Key)
+- `username`
+- `address`
+- `delivery_type`
 
-1. **Users Table:**
-   - `user_id` (Primary Key)
-   - `username`
-   - `password`
-   - `Address`
-   - `Email`
+### Orders Table
+- `order_id` (Partition Key)
+- `user_id`
+- `product_id`
+- `order_status`
+- `timestamp`
 
-2. **Products Table:**
-   - `product_id` (Primary Key)
-   - `seller_id` (Foreign Key referencing Sellers Table)
-   - `name`
-   - `description`
-   - `price`
-   - `category`
-   - `Quantity`
-   - `Image`
-   
-3. **Sellers Table:**
-   - `seller_id` (Primary Key)
-   - `username`
-   - `password`
-   - `Address`
-   - `Delivery-type`
-
-4. **Admins Table:**
-   - `admin_id` (Primary Key)
-   - `username`
-   - `password`
-
+---
 
 ## Technologies Used
 
-- Flask (Backend)
-- HTML, CSS (Frontend)
-- SQL (Database)
+- **Backend:** Python (Flask)
+- **Frontend:** HTML, CSS, JavaScript
+- **Database:** Amazon DynamoDB
+- **Cloud Platform:** AWS (EC2, IAM, SNS)
+- **Version Control:** Git & GitHub
 
-## Acknowledgements
-This project was created by Me. Feel free to contribute, report issues, or provide feedback!
+---
 
+## Deployment
 
+- Backend deployed on **Amazon EC2**
+- IAM roles attached to EC2 for secure DynamoDB & SNS access
+- Application accessed via EC2 public IP or domain
+
+---
+
+## How to Run Locally
+
+```bash
+pip install -r requirements.txt
+python main.py
