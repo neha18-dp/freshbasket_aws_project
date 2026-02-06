@@ -9,12 +9,16 @@ app.secret_key = "freshbasket_aws_secret"
 # ---------------- AWS CONFIG ----------------
 REGION = "us-east-1"
 dynamodb = boto3.resource("dynamodb", region_name=REGION)
+sns = boto3.client('sns', region_name=REGION)
+
 
 users_table = dynamodb.Table("Users")
 products_table = dynamodb.Table("Products")
 cart_table = dynamodb.Table("Cart")
 orders_table = dynamodb.Table("Orders")
 sellers_table = dynamodb.Table("Sellers")
+
+SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:975050316116:FreshBasket'
 # ---------------- PUBLIC ----------------
 @app.route("/")
 def index():
