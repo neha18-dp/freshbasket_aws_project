@@ -9,8 +9,7 @@ app.secret_key = "freshbasket_aws_secret"
 # ---------------- AWS CONFIG ----------------
 REGION = "us-east-1"
 dynamodb = boto3.resource("dynamodb", region_name=REGION)
-sns = boto3.client('sns', region_name=REGION)
-
+sns = boto3.client("sns", region_name=REGION)
 
 users_table = dynamodb.Table("Users")
 products_table = dynamodb.Table("Products")
@@ -18,7 +17,8 @@ cart_table = dynamodb.Table("Cart")
 orders_table = dynamodb.Table("Orders")
 sellers_table = dynamodb.Table("Sellers")
 
-SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:975050316116:FreshBasket'
+SNS_TOPIC_ARN = "arn:aws:sns:us-east-1:975050316116:FreshBasket"
+
 # ---------------- PUBLIC ----------------
 @app.route("/")
 def index():
@@ -33,11 +33,44 @@ def contactus():
     return render_template("contactus.html")
 
 # ---------------- AUTH ----------------
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        username = request.form["username"]
+        email = request.form.get("email", "")
+        phone = request.form.get("phone", "")
+        address = request.form.get("address", "")
+
+        # Add user to DynamoDB
+        users_table.put_item(
+            Item={
+                "username": username,
+                "role": "user",
+                "email": email,
+                "phone": phone,
+                "address": address
+            }
+        )
+
+        session["username"] = username
+        session["role"] = "user"
+
+        # SNS notification for new signup
+        sns.publish(
+            TopicArn=SNS_TOPIC_ARN,
+            Message=f"New user signed up: {username}",
+            Subject="FreshBasket Signup Notification"
+        )
+
+        return redirect(url_for("home"))
+
+    return render_template("registration.html")
+
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form["username"]
-
     res = users_table.get_item(Key={"username": username})
+
     if "Item" not in res:
         return "User not found"
 
@@ -45,15 +78,10 @@ def login():
     session["role"] = res["Item"]["role"]
 
     if session["role"] == "admin":
-        return redirect(url_for("admin"))
+        return redirect(url_for("admin_dashboard"))
     elif session["role"] == "seller":
-        return redirect(url_for("seller"))
+        return redirect(url_for("seller_dashboard"))
     return redirect(url_for("home"))
-
-@app.route("/signup")
-def signup():
-    return render_template("registration.html")  # or whatever template you want
-
 
 @app.route("/logout")
 def logout():
@@ -67,13 +95,10 @@ def profile():
         return redirect(url_for("index"))
 
     success = False
-
     if request.method == "POST":
         users_table.update_item(
             Key={"username": session["username"]},
-            UpdateExpression="""
-                SET email=:e, phone=:p, address=:a
-            """,
+            UpdateExpression="SET email=:e, phone=:p, address=:a",
             ExpressionAttributeValues={
                 ":e": request.form["email"],
                 ":p": request.form["phone"],
@@ -105,19 +130,16 @@ def add_to_cart(pid):
 
 @app.route("/cart")
 def cart():
-    res = cart_table.query(
-        KeyConditionExpression=Key("username").eq(session["username"])
-    )
+    res = cart_table.query(KeyConditionExpression=Key("username").eq(session["username"]))
     return render_template("order.html", cart=res.get("Items", []))
 
 @app.route("/placeorder", methods=["POST"])
 def placeorder():
+    cart_items = cart_table.query(KeyConditionExpression=Key("username").eq(session["username"])).get("Items", [])
+    if not cart_items:
+        return redirect(url_for("cart"))
+
     order_id = str(uuid.uuid4())
-
-    cart_items = cart_table.query(
-        KeyConditionExpression=Key("username").eq(session["username"])
-    ).get("Items", [])
-
     orders_table.put_item(
         Item={
             "order_id": order_id,
@@ -127,13 +149,16 @@ def placeorder():
         }
     )
 
+    # Delete cart items
     for item in cart_items:
-        cart_table.delete_item(
-            Key={
-                "username": session["username"],
-                "product_id": item["product_id"]
-            }
-        )
+        cart_table.delete_item(Key={"username": session["username"], "product_id": item["product_id"]})
+
+    # SNS notification for new order
+    sns.publish(
+        TopicArn=SNS_TOPIC_ARN,
+        Message=f"New order placed by {session['username']}, Order ID: {order_id}",
+        Subject="FreshBasket Order Notification"
+    )
 
     return redirect(url_for("myorders"))
 
@@ -145,14 +170,17 @@ def myorders():
 
 # ---------------- SELLER ----------------
 @app.route("/seller")
-def seller():
+def seller_dashboard():
+    if session.get("role") != "seller":
+        return redirect(url_for("index"))
     return render_template("seller.html")
 
 @app.route("/seller/add-product", methods=["POST"])
 def seller_add_product():
+    product_id = str(uuid.uuid4())
     products_table.put_item(
         Item={
-            "product_id": str(uuid.uuid4()),
+            "product_id": product_id,
             "name": request.form["fruit_name"],
             "weight": request.form["fruit_weight"],
             "rate": int(request.form["fruit_rate"]),
@@ -161,11 +189,21 @@ def seller_add_product():
             "category": request.form["fruit_category"]
         }
     )
-    return redirect(url_for("seller"))
+
+    # SNS notification for new product
+    sns.publish(
+        TopicArn=SNS_TOPIC_ARN,
+        Message=f"New product added by seller {session['username']}: {request.form['fruit_name']}",
+        Subject="FreshBasket New Product"
+    )
+
+    return redirect(url_for("seller_dashboard"))
 
 # ---------------- ADMIN ----------------
 @app.route("/admin")
-def admin():
+def admin_dashboard():
+    if session.get("role") != "admin":
+        return redirect(url_for("index"))
     return render_template(
         "admin.html",
         users=users_table.scan().get("Items", []),
@@ -174,9 +212,5 @@ def admin():
     )
 
 # ---------------- RUN ----------------
-# if __name__ == "__main__":
-#     app.run(host="0.0.0.0", port=5000)
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-
