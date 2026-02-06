@@ -14,7 +14,7 @@ users_table = dynamodb.Table("Users")
 products_table = dynamodb.Table("Products")
 cart_table = dynamodb.Table("Cart")
 orders_table = dynamodb.Table("Orders")
-
+sellers_table = dynamodb.Table("Sellers")
 # ---------------- PUBLIC ----------------
 @app.route("/")
 def index():
