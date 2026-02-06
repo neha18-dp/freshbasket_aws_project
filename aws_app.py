@@ -50,6 +50,11 @@ def login():
         return redirect(url_for("seller"))
     return redirect(url_for("home"))
 
+@app.route("/signup")
+def signup():
+    return render_template("registration.html")  # or whatever template you want
+
+
 @app.route("/logout")
 def logout():
     session.clear()
