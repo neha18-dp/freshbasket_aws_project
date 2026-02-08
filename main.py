@@ -184,13 +184,19 @@ def placeorder():
     if not session.get("cart"):
         return redirect(url_for("cart"))
 
+    session.setdefault("orders", [])
+
     for item in session["cart"]:
         item["status"] = "Ordered"
+        item["total_price"] = item["price"] * item["qty"]  # ✅ IMPORTANT
 
-    session.setdefault("orders", []).extend(session["cart"])
+        session["orders"].append(item.copy())  # safer copy
+
     session["cart"] = []
+    session.modified = True
 
     return redirect(url_for("myorders"))
+
 
 @app.route("/myorders")
 def myorders():
