@@ -48,7 +48,7 @@ def signup():
         users_table.put_item(
             Item={
                 "username": username,
-                "password": password,   # ⚠️ plaintext for now (can hash later)
+                "password": password,
                 "email": email,
                 "firstname": firstname,
                 "lastname": lastname,
@@ -59,7 +59,6 @@ def signup():
         session["username"] = username
         session["role"] = "user"
 
-        # SNS notification (safe)
         try:
             sns.publish(
                 TopicArn=SNS_TOPIC_ARN,
@@ -91,6 +90,7 @@ def login():
         return redirect(url_for("seller_dashboard"))
     return redirect(url_for("home"))
 
+
 @app.route("/logout")
 def logout():
     session.clear()
@@ -118,36 +118,29 @@ def profile():
     user = users_table.get_item(Key={"username": session["username"]}).get("Item")
     return render_template("profile.html", user=user, success=success)
 
-# ---------------- USER ----------------
+# ---------------- HOME / CATEGORIES ----------------
+def get_products_by_category(category=None):
+    items = products_table.scan().get("Items", [])
+    if category:
+        items = [p for p in items if p.get("category") == category]
+    return items
+
 @app.route("/home")
 def home():
-    products = products_table.scan().get("Items", [])
+    products = get_products_by_category()
     return render_template("home.html", products=products)
 
-# ---------------- CATEGORIES ----------------
-@app.route("/fruits")
-def fruits():
-    products = products_table.scan().get("Items", [])
-    fruits_only = [p for p in products if p.get("category") == "fruits"]
-    return render_template("fruits.html", data=fruits_only)
+@app.route("/categories/<category>")
+def category_page(category):
+    products = get_products_by_category(category)
+    return render_template("home.html", products=products)
 
-
-@app.route("/vegetables")
-def vegetables():
-    products = products_table.scan().get("Items", [])
-    veg_only = [p for p in products if p.get("category") == "vegetables"]
-    return render_template("vegetables.html", data=veg_only)
-
-
-@app.route("/seasonal")
-def seasonal():
-    products = products_table.scan().get("Items", [])
-    seasonal_only = [p for p in products if p.get("category") == "seasonal"]
-    return render_template("seasonal.html", data=seasonal_only)
-
-
+# ---------------- CART ----------------
 @app.route("/addtocart/<pid>", methods=["POST"])
 def add_to_cart(pid):
+    if "username" not in session:
+        return jsonify({"success": False})
+
     cart_table.put_item(
         Item={
             "username": session["username"],
@@ -160,11 +153,18 @@ def add_to_cart(pid):
 
 @app.route("/cart")
 def cart():
+    if "username" not in session:
+        return redirect(url_for("index"))
+
     res = cart_table.query(KeyConditionExpression=Key("username").eq(session["username"]))
-    return render_template("order.html", cart=res.get("Items", []))
+    cart_items = res.get("Items", [])
+    return render_template("order.html", cart=cart_items)
 
 @app.route("/placeorder", methods=["POST"])
 def placeorder():
+    if "username" not in session:
+        return redirect(url_for("index"))
+
     cart_items = cart_table.query(KeyConditionExpression=Key("username").eq(session["username"])).get("Items", [])
     if not cart_items:
         return redirect(url_for("cart"))
@@ -179,23 +179,29 @@ def placeorder():
         }
     )
 
-    # Delete cart items
+    # Remove cart items
     for item in cart_items:
         cart_table.delete_item(Key={"username": session["username"], "product_id": item["product_id"]})
 
-    # SNS notification for new order
-    sns.publish(
-        TopicArn=SNS_TOPIC_ARN,
-        Message=f"New order placed by {session['username']}, Order ID: {order_id}",
-        Subject="FreshBasket Order Notification"
-    )
+    # SNS notification
+    try:
+        sns.publish(
+            TopicArn=SNS_TOPIC_ARN,
+            Message=f"New order placed by {session['username']}, Order ID: {order_id}",
+            Subject="FreshBasket Order Notification"
+        )
+    except Exception as e:
+        print("SNS error:", e)
 
     return redirect(url_for("myorders"))
 
 @app.route("/myorders")
 def myorders():
-    orders = orders_table.scan().get("Items", [])
-    user_orders = [o for o in orders if o["username"] == session["username"]]
+    if "username" not in session:
+        return redirect(url_for("index"))
+
+    all_orders = orders_table.scan().get("Items", [])
+    user_orders = [o for o in all_orders if o["username"] == session["username"]]
     return render_template("myorders.html", orders=user_orders)
 
 # ---------------- SELLER ----------------
@@ -220,12 +226,14 @@ def seller_add_product():
         }
     )
 
-    # SNS notification for new product
-    sns.publish(
-        TopicArn=SNS_TOPIC_ARN,
-        Message=f"New product added by seller {session['username']}: {request.form['fruit_name']}",
-        Subject="FreshBasket New Product"
-    )
+    try:
+        sns.publish(
+            TopicArn=SNS_TOPIC_ARN,
+            Message=f"New product added by seller {session['username']}: {request.form['fruit_name']}",
+            Subject="FreshBasket New Product"
+        )
+    except Exception as e:
+        print("SNS error:", e)
 
     return redirect(url_for("seller_dashboard"))
 
@@ -234,12 +242,12 @@ def seller_add_product():
 def admin_dashboard():
     if session.get("role") != "admin":
         return redirect(url_for("index"))
-    return render_template(
-        "admin.html",
-        users=users_table.scan().get("Items", []),
-        products=products_table.scan().get("Items", []),
-        orders=orders_table.scan().get("Items", [])
-    )
+
+    users = users_table.scan().get("Items", [])
+    products = products_table.scan().get("Items", [])
+    orders = orders_table.scan().get("Items", [])
+
+    return render_template("admin.html", users=users, products=products, orders=orders)
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
