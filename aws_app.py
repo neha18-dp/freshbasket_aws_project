@@ -79,6 +79,15 @@ def login():
     res = users_table.get_item(Key={"username": username})
 
     if "Item" not in res:
+        # fallback for admin/seller accounts
+        if username == "admin":
+            session["username"] = "admin"
+            session["role"] = "admin"
+            return redirect(url_for("admin_dashboard"))
+        elif username.startswith("seller"):
+            session["username"] = username
+            session["role"] = "seller"
+            return redirect(url_for("seller_dashboard"))
         return "User not found"
 
     session["username"] = username
@@ -89,6 +98,7 @@ def login():
     elif session["role"] == "seller":
         return redirect(url_for("seller_dashboard"))
     return redirect(url_for("home"))
+
 
 
 @app.route("/logout")
@@ -129,6 +139,25 @@ def get_products_by_category(category=None):
 def home():
     products = get_products_by_category()
     return render_template("home.html", products=products)
+
+@app.route("/fruits")
+def fruits():
+    products = products_table.scan().get("Items", [])
+    fruits_only = [p for p in products if p.get("category") == "fruits"]
+    return render_template("fruits.html", data=fruits_only)
+
+@app.route("/vegetables")
+def vegetables():
+    products = products_table.scan().get("Items", [])
+    veg_only = [p for p in products if p.get("category") == "vegetables"]
+    return render_template("vegetables.html", data=veg_only)
+
+@app.route("/seasonal")
+def seasonal():
+    products = products_table.scan().get("Items", [])
+    seasonal_only = [p for p in products if p.get("category") == "seasonal"]
+    return render_template("seasonal.html", data=seasonal_only)
+
 
 @app.route("/categories/<category>")
 def category_page(category):
