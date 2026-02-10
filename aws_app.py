@@ -36,35 +36,43 @@ def contactus():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        username = request.form["username"]
-        email = request.form.get("email", "")
-        phone = request.form.get("phone", "")
-        address = request.form.get("address", "")
+        username = request.form.get("username")
+        password = request.form.get("password")
+        email = request.form.get("email")
+        firstname = request.form.get("firstname")
+        lastname = request.form.get("lastname")
 
-        # Add user to DynamoDB
+        if not username or not password:
+            return "Username and password are required", 400
+
         users_table.put_item(
             Item={
                 "username": username,
-                "role": "user",
+                "password": password,   # ⚠️ plaintext for now (can hash later)
                 "email": email,
-                "phone": phone,
-                "address": address
+                "firstname": firstname,
+                "lastname": lastname,
+                "role": "user"
             }
         )
 
         session["username"] = username
         session["role"] = "user"
 
-        # SNS notification for new signup
-        sns.publish(
-            TopicArn=SNS_TOPIC_ARN,
-            Message=f"New user signed up: {username}",
-            Subject="FreshBasket Signup Notification"
-        )
+        # SNS notification (safe)
+        try:
+            sns.publish(
+                TopicArn=SNS_TOPIC_ARN,
+                Message=f"New user registered: {username}",
+                Subject="FreshBasket Signup"
+            )
+        except Exception as e:
+            print("SNS error:", e)
 
         return redirect(url_for("home"))
 
     return render_template("registration.html")
+
 
 @app.route("/login", methods=["POST"])
 def login():
