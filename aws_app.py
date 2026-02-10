@@ -17,7 +17,7 @@ cart_table = dynamodb.Table("Cart")
 orders_table = dynamodb.Table("Orders")
 sellers_table = dynamodb.Table("Sellers")
 
-SNS_TOPIC_ARN = "arn:aws:sns:us-east-1:975050316116:FreshBasket"
+SNS_TOPIC_ARN = "arn:aws:sns:us-east-1:796973488755:FreshBasket"
 
 # ---------------- PUBLIC ----------------
 @app.route("/")
