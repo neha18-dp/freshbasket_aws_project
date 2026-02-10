@@ -135,6 +135,15 @@ def category_page(category):
     products = get_products_by_category(category)
     return render_template("home.html", products=products)
 
+@app.route("/category/<category_name>")
+def category(category_name):
+    products = products_table.scan().get("Items", [])
+    filtered = [p for p in products if p.get("category", "").lower() == category_name.lower()]
+    if not filtered:
+        return f"No products found in category '{category_name}'", 404
+    return render_template("category.html", data=filtered, category=category_name)
+
+
 # ---------------- CART ----------------
 @app.route("/addtocart/<pid>", methods=["POST"])
 def add_to_cart(pid):

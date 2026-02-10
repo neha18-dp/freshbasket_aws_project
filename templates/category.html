@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ category.title() }}</title>
+</head>
+<body>
+    <h1>{{ category.title() }}</h1>
+    <ul>
+        {% for p in data %}
+            <li>{{ p.name }} - ₹{{ p.rate }} - {{ p.description }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
