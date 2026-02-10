@@ -124,6 +124,28 @@ def home():
     products = products_table.scan().get("Items", [])
     return render_template("home.html", products=products)
 
+# ---------------- CATEGORIES ----------------
+@app.route("/fruits")
+def fruits():
+    products = products_table.scan().get("Items", [])
+    fruits_only = [p for p in products if p.get("category") == "fruits"]
+    return render_template("fruits.html", data=fruits_only)
+
+
+@app.route("/vegetables")
+def vegetables():
+    products = products_table.scan().get("Items", [])
+    veg_only = [p for p in products if p.get("category") == "vegetables"]
+    return render_template("vegetables.html", data=veg_only)
+
+
+@app.route("/seasonal")
+def seasonal():
+    products = products_table.scan().get("Items", [])
+    seasonal_only = [p for p in products if p.get("category") == "seasonal"]
+    return render_template("seasonal.html", data=seasonal_only)
+
+
 @app.route("/addtocart/<pid>", methods=["POST"])
 def add_to_cart(pid):
     cart_table.put_item(
